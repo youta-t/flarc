@@ -315,21 +315,21 @@ func TestSubcommand(t *testing.T) {
 			}
 
 			subcom, err := flarc.NewCommand(
-				"this is subcommand, called {{ .Command }}",
+				"this is subcommand",
 				FlagSub{}, flarc.Args{
 					{Name: "arg1", Required: true, Help: "subcommand's arg"},
 				},
 				task,
-				flarc.WithDescription("this is subcommand description"),
+				flarc.WithDescription("this is subcommand {{ .Command }} description"),
 			)
 			if err != nil {
 				t.Fatal(err)
 			}
 
 			cg, err := flarc.NewCommandGroup(
-				"this is command group, called {{ .Command }}",
+				"this is command group",
 				FlagSuper{},
-				flarc.WithGroupDescription("this is group description."),
+				flarc.WithGroupDescription("this is group {{ .Command }} description."),
 				flarc.WithSubcommand("sub", subcom),
 			)
 			if err != nil {
@@ -372,7 +372,7 @@ Usage:
 
 Description:
 
-    this is group description.
+    this is group test description.
 
 Flags:
 
@@ -405,7 +405,7 @@ Usage:
 
 Description:
 
-    this is group description.
+    this is group test description.
 
 Flags:
 
@@ -438,7 +438,7 @@ Usage:
 
 Description:
 
-    this is group description.
+    this is group test description.
 
 Flags:
 
@@ -469,7 +469,7 @@ Usage:
 
 Description:
 
-    this is subcommand description
+    this is subcommand test sub description
 
 Flags:
 
@@ -500,7 +500,7 @@ Usage:
 
 Description:
 
-    this is subcommand description
+    this is subcommand test sub description
 
 Flags:
 
@@ -655,7 +655,7 @@ Usage:
 
 Description:
 
-    this is subcommand description
+    this is subcommand test sub description
 
 Flags:
 
