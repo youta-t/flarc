@@ -3,16 +3,16 @@ flarc -- commandline parser, supports flag, arg, subcommands
 
 flarc is a commandline parser. With flarc, you can
 
-- declare *fl*ags
+- declare *fl*ags, gnu style (short option `-f` and long option `--flag`)
 - declare positional *ar*guments, and
 - declare sub*c*ommands
-- get generated help text help texts
+- get generated help texts
 
 Install
 --------
 
 ```
-go get githuc.com/youta-t/flarc
+go get github.com/youta-t/flarc
 ```
 
 flarc needs go1.21+.
@@ -29,9 +29,18 @@ import "github.com/youta-t/flarc"
 
 // declare struct for flags.
 // Flag options can be set with tag.
+//
+// Recognized tag keys are:
+//
+// - flag:    flag name. by default, field-name-in-kebab-case.
+// - alias:   aliases of the flag.
+// - help:    help message.
+// - metavar: value example in Usage section in help.
+//            By default, the default value of the flag is used.
+//
 type Flag struct {
     Foo string  `alias:"f" help:"flag foo" metavar:"FOO"`
-    Bar int     // when no tag, assumed `flag:"${field-name-in-kebab-case}"` is given.
+    Bar int     // when no tag, assumed as `flag:"${field-name-in-kebab-case}"` is given.
     Fizz bool   `flag:"F"`  // flag name is case sensitive
     Bazz time.Duration  `metavar:"DURATION"`
 }
@@ -86,6 +95,8 @@ func main() {
 			return nil
 		},
 
+		// Description is template.
+		// Placeholder {{ .Command }} will be replaced with command name at runtime.
 		flarc.WithDescription(`this is example command.
 
 To show how to declare flags and args, also genereatad help message.
@@ -99,13 +110,9 @@ This command is called "{{ .Command }}"
 		os.Exit(1)
 	}
 
-
 	// ...
 }
 ```
-
-In description, you can use placeholder `{{ .Command }}`.
-This will be filled with the command name at invoke time.
 
 ### Run command
 
@@ -125,7 +132,7 @@ func main() {
 	os.Exit(flarc.Run(
 		ctx, cmd,
 
-		// optional extra params.
+		// (optional) extra params.
 		//
 		// For example, loggers can be injected with this.
 		flarc.WithParams([]any{param{ParamValue: "this is param value"}}),
