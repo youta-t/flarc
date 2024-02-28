@@ -326,11 +326,24 @@ func TestSubcommand(t *testing.T) {
 				t.Fatal(err)
 			}
 
+			subcom2, err := flarc.NewCommand(
+				"this is another subcommand",
+				FlagSub{}, flarc.Args{
+					{Name: "arg2", Required: true, Help: "subcommand2's arg"},
+				},
+				task,
+				flarc.WithDescription("this is subcommand2 {{ .Command }} description"),
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			cg, err := flarc.NewCommandGroup(
 				"this is command group",
 				FlagSuper{},
 				flarc.WithGroupDescription("this is group {{ .Command }} description."),
 				flarc.WithSubcommand("sub", subcom),
+				flarc.WithSubcommand("sub2", subcom2),
 			)
 			if err != nil {
 				t.Fatal(err)
@@ -382,6 +395,7 @@ Flags:
 Subcommands:
 
     sub         this is subcommand
+    sub2        this is another subcommand
 
 `),
 		},
@@ -415,6 +429,7 @@ Flags:
 Subcommands:
 
     sub         this is subcommand
+    sub2        this is another subcommand
 
 `),
 		},
@@ -448,6 +463,7 @@ Flags:
 Subcommands:
 
     sub         this is subcommand
+    sub2        this is another subcommand
 
 `),
 		},

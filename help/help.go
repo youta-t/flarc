@@ -232,6 +232,7 @@ func (scs *subcommandSection) WriteHelp(w io.Writer) {
 		i := 0
 		for name, cmd := range scs.cmds {
 			subcommands[i] = subcommand{Name: name, Command: cmd}
+			i += 1
 		}
 
 		slices.SortFunc(subcommands, func(a, b subcommand) int {

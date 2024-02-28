@@ -49,9 +49,9 @@ type runOption struct {
 
 type RunOption func(*runOption) *runOption
 
-// overwrite args.
+// WithArgs overwrites args.
 //
-// If do not pass this, args is defaulted as os.Args[1:]
+// By default, args is defaulted as os.Args[1:]
 func WithArgs(argv []string) RunOption {
 	return func(ro *runOption) *runOption {
 		ro.argv = argv
@@ -59,7 +59,7 @@ func WithArgs(argv []string) RunOption {
 	}
 }
 
-// WithHelp set global flag --help, -h
+// WithHelp add global flags --help, -h
 func WithHelp(need bool) RunOption {
 	return func(ro *runOption) *runOption {
 		ro.useHelp = need
@@ -67,7 +67,7 @@ func WithHelp(need bool) RunOption {
 	}
 }
 
-// Replace Stdin
+// WithInput replace Stdin
 func WithInput(in io.Reader) RunOption {
 	return func(ro *runOption) *runOption {
 		ro.stdin = in
@@ -75,6 +75,9 @@ func WithInput(in io.Reader) RunOption {
 	}
 }
 
+// WithName overwrites command name.
+//
+// By default, command name is the basename of os.Args[0]
 func WithName(name string) RunOption {
 	return func(ro *runOption) *runOption {
 		ro.name = name
@@ -82,7 +85,7 @@ func WithName(name string) RunOption {
 	}
 }
 
-// Replace Stdout and Stderr
+// WithOutput replaces Stdout and Stderr
 //
 // If passing nil as out or errout, it is handled as io.Discard.
 func WithOutput(out io.Writer, errout io.Writer) RunOption {
@@ -100,7 +103,7 @@ func WithOutput(out io.Writer, errout io.Writer) RunOption {
 	}
 }
 
-// Pass extra parameters
+// WithParams passes extra parameters
 //
 // If pass this multiple times, parameters are appended with previous ones.
 func WithParams(param []any) RunOption {
@@ -110,7 +113,7 @@ func WithParams(param []any) RunOption {
 	}
 }
 
-// Run command.
+// Run runs command.
 //
 // # Args
 //
@@ -119,6 +122,10 @@ func WithParams(param []any) RunOption {
 // - cmd: command to be executed
 //
 // - options: options.
+//
+// # Returns
+//
+// - int: status code of this command.
 func Run(ctx context.Context, cmd Command, options ...RunOption) int {
 	runOpt := &runOption{
 		name:    filepath.Base(os.Args[0]),
