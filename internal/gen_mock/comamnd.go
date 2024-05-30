@@ -4,31 +4,16 @@ package gen_mock
 import (
 	its "github.com/youta-t/its"
 	itskit "github.com/youta-t/its/itskit"
-	testee "github.com/youta-t/flarc"
-	u_context "context"
+	mockkit "github.com/youta-t/its/mocker/mockkit"
+	pkg1 "context"
+	pkg2 "github.com/youta-t/flarc"
 	
 )
 
-type _TaskReturnFixture[T any] struct {
-	ret0 error
-	
-}
-
-type _TaskReturn[T any] struct {
-	fixture _TaskReturnFixture[T]
-}
-
-func (rfx _TaskReturn[T]) Get() (
-	error,
-	
-) {
-	return rfx.fixture.ret0
-}
-
 type _TaskCallSpec[T any] struct {
-	arg0 its.Matcher[u_context.Context]
+	arg0 its.Matcher[pkg1.Context]
 	
-	arg1 its.Matcher[testee.Commandline[T]]
+	arg1 its.Matcher[pkg2.Commandline[T]]
 	
 	arg2 its.Matcher[[]any]
 	
@@ -40,10 +25,10 @@ type _TaskCall[T any] struct {
 	spec _TaskCallSpec[T]
 }
 
-func NewTaskCall[T any](
-	arg0 its.Matcher[u_context.Context],
+func Task_Expects[T any](
+	arg0 its.Matcher[pkg1.Context],
 	
-	arg1 its.Matcher[testee.Commandline[T]],
+	arg1 its.Matcher[pkg2.Commandline[T]],
 	
 	arg2 its.Matcher[[]any],
 	
@@ -74,18 +59,18 @@ func NewTaskCall[T any](
 	}
 }
 
-type TaskBehaviour [T any] struct {
+type _TaskBehavior [T any] struct {
 	name itskit.Label
 	spec _TaskCallSpec[T]
-	effect func(arg0 u_context.Context, arg1 testee.Commandline[T], arg2 []any) error
+	effect func(arg0 pkg1.Context, arg1 pkg2.Commandline[T], arg2 []any) error
 }
 
-func (b *TaskBehaviour[T]) Mock(t interface { Error(...any) }) func(arg0 u_context.Context, arg1 testee.Commandline[T], arg2 []any) error {
+func (b *_TaskBehavior[T]) Fn(t mockkit.TestLike) func(arg0 pkg1.Context, arg1 pkg2.Commandline[T], arg2 []any) error {
 	return func (
 		
-		arg0 u_context.Context,
+		arg0 pkg1.Context,
 		
-		arg1 testee.Commandline[T],
+		arg1 pkg2.Commandline[T],
 		
 		arg2 []any,
 		
@@ -103,7 +88,7 @@ func (b *TaskBehaviour[T]) Mock(t interface { Error(...any) }) func(arg0 u_conte
 		{
 			matcher := b.spec.arg0
 			if matcher == nil {
-				matcher = its.Never[u_context.Context]()
+				matcher = its.Never[pkg1.Context]()
 			}
 			m := matcher.Match(arg0)
 			if m.Ok() {
@@ -115,7 +100,7 @@ func (b *TaskBehaviour[T]) Mock(t interface { Error(...any) }) func(arg0 u_conte
 		{
 			matcher := b.spec.arg1
 			if matcher == nil {
-				matcher = its.Never[testee.Commandline[T]]()
+				matcher = its.Never[pkg2.Commandline[T]]()
 			}
 			m := matcher.Match(arg1)
 			if m.Ok() {
@@ -158,12 +143,12 @@ func (c _TaskCall[T]) ThenReturn(
 
 	ret0 error,
 
-) *TaskBehaviour[T] {
+) mockkit.FuncBehavior[ func (arg0 pkg1.Context, arg1 pkg2.Commandline[T], arg2 []any) error  ] {
 	return c.ThenEffect(func(
 		
-		u_context.Context,
+		pkg1.Context,
 		
-		testee.Commandline[T],
+		pkg2.Commandline[T],
 		
 		[]any,
 		
@@ -178,8 +163,8 @@ func (c _TaskCall[T]) ThenReturn(
 	})
 }
 
-func (c _TaskCall[T]) ThenEffect(effect func(arg0 u_context.Context, arg1 testee.Commandline[T], arg2 []any) error) *TaskBehaviour[T] {
-	return &TaskBehaviour[T] {
+func (c _TaskCall[T]) ThenEffect(effect func(arg0 pkg1.Context, arg1 pkg2.Commandline[T], arg2 []any) error) mockkit.FuncBehavior[ func (arg0 pkg1.Context, arg1 pkg2.Commandline[T], arg2 []any) error ] {
+	return &_TaskBehavior[T] {
 		name: c.name,
 		spec: c.spec,
 		effect: effect,

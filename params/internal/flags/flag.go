@@ -5,6 +5,7 @@ import (
 	goflag "flag"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -185,7 +186,8 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		metavar = mv
 	}
 
-	switch d := dest.Interface().(type) {
+	defaultValue := dest.Interface()
+	switch d := defaultValue.(type) {
 	case func(string) error:
 		return flag[string]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -215,10 +217,17 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	}
 
-	switch def := reflect.New(elem(tfld.Type)).Elem().Interface().(type) {
+	switch reflect.New(elem(tfld.Type)).Elem().Interface().(type) {
 	case string:
 		if metavar == "" {
-			metavar = def
+			switch d := defaultValue.(type) {
+			case string:
+				metavar = d
+			case *string:
+				if d != nil {
+					metavar = *d
+				}
+			}
 		}
 		return flag[string]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -228,7 +237,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case bool:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%#v", def)
+			switch d := defaultValue.(type) {
+			case bool:
+				metavar = fmt.Sprintf("%#v", d)
+			case *bool:
+				if d != nil {
+					metavar = fmt.Sprintf("%#v", *d)
+				}
+			}
 		}
 		return flag[bool]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -238,7 +254,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case int:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case int:
+				metavar = fmt.Sprintf("%d", d)
+			case *int:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[int]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -248,7 +271,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case int8:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case int8:
+				metavar = fmt.Sprintf("%d", d)
+			case *int8:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[int8]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -258,7 +288,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case int16:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case int16:
+				metavar = fmt.Sprintf("%d", d)
+			case *int16:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[int16]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -268,7 +305,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case int32:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case int32:
+				metavar = fmt.Sprintf("%d", d)
+			case *int32:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[int32]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -278,7 +322,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case int64:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case int64:
+				metavar = fmt.Sprintf("%d", d)
+			case *int64:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[int64]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -288,7 +339,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case uint:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case uint:
+				metavar = fmt.Sprintf("%d", d)
+			case *uint:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[uint]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -298,7 +356,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case uint8:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case uint8:
+				metavar = fmt.Sprintf("%d", d)
+			case *uint8:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[uint8]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -308,7 +373,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case uint16:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case uint16:
+				metavar = fmt.Sprintf("%d", d)
+			case *uint16:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[uint16]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -318,7 +390,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case uint32:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case uint32:
+				metavar = fmt.Sprintf("%d", d)
+			case *uint32:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[uint32]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -328,7 +407,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case uint64:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%d", def)
+			switch d := defaultValue.(type) {
+			case uint64:
+				metavar = fmt.Sprintf("%d", d)
+			case *uint64:
+				if d != nil {
+					metavar = fmt.Sprintf("%d", *d)
+				}
+			}
 		}
 		return flag[uint64]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -338,7 +424,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case float32:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%f", def)
+			switch d := defaultValue.(type) {
+			case float32:
+				metavar = strconv.FormatFloat(float64(d), 'f', -1, 32)
+			case *float32:
+				if d != nil {
+					metavar = strconv.FormatFloat(float64(*d), 'f', -1, 32)
+				}
+			}
 		}
 		return flag[float32]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -348,7 +441,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case float64:
 		if metavar == "" {
-			metavar = fmt.Sprintf("%f", def)
+			switch d := defaultValue.(type) {
+			case float64:
+				metavar = strconv.FormatFloat(d, 'f', -1, 64)
+			case *float64:
+				if d != nil {
+					metavar = strconv.FormatFloat(*d, 'f', -1, 64)
+				}
+			}
 		}
 		return flag[float64]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -358,7 +458,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case time.Duration:
 		if metavar == "" {
-			metavar = def.String()
+			switch d := defaultValue.(type) {
+			case time.Duration:
+				metavar = d.String()
+			case *time.Duration:
+				if d != nil {
+					metavar = d.String()
+				}
+			}
 		}
 		return flag[time.Duration]{
 			name: name, alias: alias, help: help, metaValue: metavar,
@@ -368,7 +475,14 @@ func New(tfld reflect.StructField, dest reflect.Value) (Flag, error) {
 		}, nil
 	case time.Time:
 		if metavar == "" {
-			metavar = def.Format(time.RFC3339Nano)
+			switch d := defaultValue.(type) {
+			case time.Time:
+				metavar = d.Format(time.RFC3339Nano)
+			case *time.Time:
+				if d != nil {
+					metavar = d.Format(time.RFC3339Nano)
+				}
+			}
 		}
 		return flag[time.Time]{
 			name: name, alias: alias, help: help, metaValue: metavar,

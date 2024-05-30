@@ -13,7 +13,7 @@ import (
 	"github.com/youta-t/flarc/internal/gen_mock"
 	"github.com/youta-t/its"
 	"github.com/youta-t/its/itskit"
-	"github.com/youta-t/its/mocker/scenario"
+	"github.com/youta-t/its/mocker/mockkit"
 )
 
 type CommandlineSpec[T any] struct {
@@ -34,15 +34,15 @@ func ItsCommandline[T any](spec CommandlineSpec[T]) its.Matcher[flarc.Commandlin
 	defer cancel()
 
 	return its.All[flarc.Commandline[T]](
-		itskit.Property(
+		its.Property(
 			".Fullname()", flarc.Commandline[T].Fullname,
 			nilsafe(spec.Fullname),
 		),
-		itskit.Property(
+		its.Property(
 			".Flags()", flarc.Commandline[T].Flags,
 			nilsafe(spec.Flags),
 		),
-		itskit.Property(
+		its.Property(
 			".Args()", flarc.Commandline[T].Args,
 			nilsafe(spec.Args),
 		),
@@ -71,16 +71,16 @@ func TestCommand(t *testing.T) {
 
 	theory := func(
 		when When,
-		task *gen_mock.TaskBehaviour[Flag],
+		task mockkit.FuncBehavior[func(context.Context, flarc.Commandline[Flag], []any) error],
 		then Then,
 	) func(*testing.T) {
 		return func(t *testing.T) {
-			sc := scenario.Begin(t)
+			sc := mockkit.BeginScenario(t)
 			defer sc.End()
 
 			var taskfn flarc.Task[Flag]
 			if task != nil {
-				_, taskfn = scenario.Next(sc, task.Mock(t))
+				taskfn = mockkit.Next(sc, task).Fn(t)
 			}
 
 			cmd, err := flarc.NewCommand(
@@ -126,7 +126,7 @@ func TestCommand(t *testing.T) {
 			stdin:            "stdin!",
 			args:             []string{"-f", "source1", "source2", "dest"},
 		},
-		gen_mock.NewTaskCall[Flag](
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[Flag]{
 				Fullname: its.EqEq("test"),
@@ -163,7 +163,7 @@ func TestCommand(t *testing.T) {
 			args:             []string{"-f", "source1", "source2", "dest"},
 			params:           []any{42, "foo"},
 		},
-		gen_mock.NewTaskCall[Flag](
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[Flag]{
 				Fullname: its.EqEq("test"),
@@ -192,7 +192,7 @@ func TestCommand(t *testing.T) {
 			stdin: "stdin!",
 			args:  []string{"-f", "source1", "source2", "dest"},
 		},
-		gen_mock.NewTaskCall[Flag](
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			its.Always[flarc.Commandline[Flag]](),
 			its.Slice[any](),
@@ -267,7 +267,7 @@ Args:
 			stdin:       "stdin!",
 			args:        []string{"-f", "source1", "source2", "dest"},
 		},
-		gen_mock.NewTaskCall[Flag](
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			its.Always[flarc.Commandline[Flag]](),
 			its.Slice[any](),
@@ -303,15 +303,18 @@ func TestSubcommand(t *testing.T) {
 		stderr its.Matcher[string]
 	}
 
-	theory := func(when When, taskMock *gen_mock.TaskBehaviour[FlagSub], then Then) func(*testing.T) {
+	theory := func(
+		when When,
+		taskMock mockkit.FuncBehavior[func(context.Context, flarc.Commandline[FlagSub], []any) error],
+		then Then,
+	) func(*testing.T) {
 		return func(t *testing.T) {
-			sc := scenario.Begin(t)
+			sc := mockkit.BeginScenario(t)
 			defer sc.End()
 
 			var task flarc.Task[FlagSub]
 			if taskMock != nil {
-				_t := taskMock.Mock(t)
-				_, task = scenario.Next(sc, _t)
+				task = mockkit.Next(sc, taskMock).Fn(t)
 			}
 
 			subcom, err := flarc.NewCommand(
@@ -536,7 +539,7 @@ Args:
 			args:  []string{"sub", "aaa"},
 			stdin: "stdin!!",
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
@@ -569,7 +572,7 @@ Args:
 			args:  []string{"sub", "-i", "99", "-f", "true", "aaa"},
 			stdin: "stdin!!",
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
@@ -594,7 +597,7 @@ Args:
 			args:  []string{"sub", "-i", "99", "--flag", "true", "aaa"},
 			stdin: "stdin!!",
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
@@ -619,7 +622,7 @@ Args:
 			args:   []string{"sub", "-i", "99", "--flag", "true", "aaa"},
 			params: []any{42, "param"},
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
@@ -645,7 +648,7 @@ Args:
 		When{
 			args: []string{"sub", "aaa"},
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
@@ -690,7 +693,7 @@ Args:
 		When{
 			args: []string{"sub", "aaa"},
 		},
-		gen_mock.NewTaskCall(
+		gen_mock.Task_Expects(
 			its.Always[context.Context](),
 			ItsCommandline(CommandlineSpec[FlagSub]{
 				Fullname: its.EqEq("test sub"),
