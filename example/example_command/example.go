@@ -17,7 +17,7 @@ import (
 // declare struct for flags.
 // Flag options can be set with tag.
 type Flag struct {
-	Foo  string        `alias:"f" help:"flag foo" metavar:"FOO"`
+	Foo  string        `alias:"f" metavar:"FOO" help:"flag foo"`
 	Bar  int           // when no tag, assumed `flag:"${field-name-in-kebab-case}"` is given.
 	Fizz bool          `alias:"F"` // flag name is case sensitive
 	Bazz time.Duration `metavar:"DURATION"`

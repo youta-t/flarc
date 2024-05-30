@@ -5,47 +5,65 @@ import (
 	"strings"
 
 	its "github.com/youta-t/its"
-	config "github.com/youta-t/its/config"
 	itskit "github.com/youta-t/its/itskit"
 	itsio "github.com/youta-t/its/itskit/itsio"
-	testee "github.com/youta-t/flarc/parser/internal"
-	u_time "time"
-	u_flag "flag"
+	config "github.com/youta-t/its/config"
+
+	pkg3 "flag"
+	pkg1 "github.com/youta-t/flarc/parser/internal"
+	pkg2 "time"
 	
 )
 
 
 type FlagSpec struct {
+	
 	StringFlag its.Matcher[string]
+	
 	BoolFlag its.Matcher[bool]
+	
 	IntFlag its.Matcher[int]
+	
 	Int8Flag its.Matcher[int8]
+	
 	Int16Flag its.Matcher[int16]
+	
 	Int32Flag its.Matcher[int32]
+	
 	Int64Flag its.Matcher[int64]
+	
 	UintFlag its.Matcher[uint]
+	
 	Uint8Flag its.Matcher[uint8]
+	
 	Uint16Flag its.Matcher[uint16]
+	
 	Uint32Flag its.Matcher[uint32]
+	
 	Uint64Flag its.Matcher[uint64]
+	
 	Float32Flag its.Matcher[float32]
+	
 	Float64Flag its.Matcher[float64]
-	DulationFlag its.Matcher[u_time.Duration]
-	TimeFlag its.Matcher[u_time.Time]
-	VarFlag its.Matcher[u_flag.Value]
+	
+	DulationFlag its.Matcher[pkg2.Duration]
+	
+	TimeFlag its.Matcher[pkg2.Time]
+	
+	VarFlag its.Matcher[pkg3.Value]
 	
 }
 
 type _FlagMatcher struct {
 	label  itskit.Label
-	fields []its.Matcher[testee.Flag]
+	fields []its.Matcher[pkg1.Flag]
 }
 
-func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
+func ItsFlag(want FlagSpec) its.Matcher[pkg1.Flag] {
 	cancel := itskit.SkipStack()
 	defer cancel()
 
-	sub := []its.Matcher[testee.Flag]{}
+	sub := []its.Matcher[pkg1.Flag]{}
 	
 	{
 		matcher := want.StringFlag
@@ -58,9 +76,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, string](
+			its.Property[pkg1.Flag, string](
 				".StringFlag",
-				func(got testee.Flag) string { return got.StringFlag },
+				func(got pkg1.Flag) string { return got.StringFlag },
 				matcher,
 			),
 		)
@@ -77,9 +95,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, bool](
+			its.Property[pkg1.Flag, bool](
 				".BoolFlag",
-				func(got testee.Flag) bool { return got.BoolFlag },
+				func(got pkg1.Flag) bool { return got.BoolFlag },
 				matcher,
 			),
 		)
@@ -96,9 +114,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, int](
+			its.Property[pkg1.Flag, int](
 				".IntFlag",
-				func(got testee.Flag) int { return got.IntFlag },
+				func(got pkg1.Flag) int { return got.IntFlag },
 				matcher,
 			),
 		)
@@ -115,9 +133,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, int8](
+			its.Property[pkg1.Flag, int8](
 				".Int8Flag",
-				func(got testee.Flag) int8 { return got.Int8Flag },
+				func(got pkg1.Flag) int8 { return got.Int8Flag },
 				matcher,
 			),
 		)
@@ -134,9 +152,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, int16](
+			its.Property[pkg1.Flag, int16](
 				".Int16Flag",
-				func(got testee.Flag) int16 { return got.Int16Flag },
+				func(got pkg1.Flag) int16 { return got.Int16Flag },
 				matcher,
 			),
 		)
@@ -153,9 +171,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, int32](
+			its.Property[pkg1.Flag, int32](
 				".Int32Flag",
-				func(got testee.Flag) int32 { return got.Int32Flag },
+				func(got pkg1.Flag) int32 { return got.Int32Flag },
 				matcher,
 			),
 		)
@@ -172,9 +190,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, int64](
+			its.Property[pkg1.Flag, int64](
 				".Int64Flag",
-				func(got testee.Flag) int64 { return got.Int64Flag },
+				func(got pkg1.Flag) int64 { return got.Int64Flag },
 				matcher,
 			),
 		)
@@ -191,9 +209,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, uint](
+			its.Property[pkg1.Flag, uint](
 				".UintFlag",
-				func(got testee.Flag) uint { return got.UintFlag },
+				func(got pkg1.Flag) uint { return got.UintFlag },
 				matcher,
 			),
 		)
@@ -210,9 +228,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, uint8](
+			its.Property[pkg1.Flag, uint8](
 				".Uint8Flag",
-				func(got testee.Flag) uint8 { return got.Uint8Flag },
+				func(got pkg1.Flag) uint8 { return got.Uint8Flag },
 				matcher,
 			),
 		)
@@ -229,9 +247,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, uint16](
+			its.Property[pkg1.Flag, uint16](
 				".Uint16Flag",
-				func(got testee.Flag) uint16 { return got.Uint16Flag },
+				func(got pkg1.Flag) uint16 { return got.Uint16Flag },
 				matcher,
 			),
 		)
@@ -248,9 +266,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, uint32](
+			its.Property[pkg1.Flag, uint32](
 				".Uint32Flag",
-				func(got testee.Flag) uint32 { return got.Uint32Flag },
+				func(got pkg1.Flag) uint32 { return got.Uint32Flag },
 				matcher,
 			),
 		)
@@ -267,9 +285,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, uint64](
+			its.Property[pkg1.Flag, uint64](
 				".Uint64Flag",
-				func(got testee.Flag) uint64 { return got.Uint64Flag },
+				func(got pkg1.Flag) uint64 { return got.Uint64Flag },
 				matcher,
 			),
 		)
@@ -286,9 +304,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, float32](
+			its.Property[pkg1.Flag, float32](
 				".Float32Flag",
-				func(got testee.Flag) float32 { return got.Float32Flag },
+				func(got pkg1.Flag) float32 { return got.Float32Flag },
 				matcher,
 			),
 		)
@@ -305,9 +323,9 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, float64](
+			its.Property[pkg1.Flag, float64](
 				".Float64Flag",
-				func(got testee.Flag) float64 { return got.Float64Flag },
+				func(got pkg1.Flag) float64 { return got.Float64Flag },
 				matcher,
 			),
 		)
@@ -317,16 +335,16 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		matcher := want.DulationFlag
 		if matcher == nil {
 			if config.StrictModeForStruct {
-				matcher = its.Never[u_time.Duration]()
+				matcher = its.Never[pkg2.Duration]()
 			} else {
-				matcher = its.Always[u_time.Duration]()
+				matcher = its.Always[pkg2.Duration]()
 			}
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, u_time.Duration](
+			its.Property[pkg1.Flag, pkg2.Duration](
 				".DulationFlag",
-				func(got testee.Flag) u_time.Duration { return got.DulationFlag },
+				func(got pkg1.Flag) pkg2.Duration { return got.DulationFlag },
 				matcher,
 			),
 		)
@@ -336,16 +354,16 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		matcher := want.TimeFlag
 		if matcher == nil {
 			if config.StrictModeForStruct {
-				matcher = its.Never[u_time.Time]()
+				matcher = its.Never[pkg2.Time]()
 			} else {
-				matcher = its.Always[u_time.Time]()
+				matcher = its.Always[pkg2.Time]()
 			}
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, u_time.Time](
+			its.Property[pkg1.Flag, pkg2.Time](
 				".TimeFlag",
-				func(got testee.Flag) u_time.Time { return got.TimeFlag },
+				func(got pkg1.Flag) pkg2.Time { return got.TimeFlag },
 				matcher,
 			),
 		)
@@ -355,16 +373,16 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 		matcher := want.VarFlag
 		if matcher == nil {
 			if config.StrictModeForStruct {
-				matcher = its.Never[u_flag.Value]()
+				matcher = its.Never[pkg3.Value]()
 			} else {
-				matcher = its.Always[u_flag.Value]()
+				matcher = its.Always[pkg3.Value]()
 			}
 		}
 		sub = append(
 			sub,
-			itskit.Property[testee.Flag, u_flag.Value](
+			its.Property[pkg1.Flag, pkg3.Value](
 				".VarFlag",
-				func(got testee.Flag) u_flag.Value { return got.VarFlag },
+				func(got pkg1.Flag) pkg3.Value { return got.VarFlag },
 				matcher,
 			),
 		)
@@ -377,7 +395,7 @@ func ItsFlag(want FlagSpec) its.Matcher[testee.Flag] {
 	}
 }
 
-func (m _FlagMatcher) Match(got testee.Flag) itskit.Match {
+func (m _FlagMatcher) Match(got pkg1.Flag) itskit.Match {
 	ok := 0
 	sub := []itskit.Match{}
 	for _, f := range m.fields {
@@ -388,11 +406,7 @@ func (m _FlagMatcher) Match(got testee.Flag) itskit.Match {
 		sub = append(sub, m)
 	}
 
-	return itskit.NewMatch(
-		len(sub) == ok,
-		m.label.Fill(got),
-		sub...,
-	)
+	return itskit.NewMatch(len(sub) == ok, m.label.Fill(got), sub...)
 }
 
 func (m _FlagMatcher) Write(ww itsio.Writer) error {
